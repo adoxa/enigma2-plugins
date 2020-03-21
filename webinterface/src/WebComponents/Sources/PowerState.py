@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from Components.Sources.Source import Source
+
 
 class PowerState(Source):
 	def __init__(self, session):
@@ -11,7 +13,7 @@ class PowerState(Source):
 
 	def getStandby(self):
 		from Screens.Standby import inStandby
-		if inStandby == None:
+		if inStandby is None:
 			return "false"
 		else:
 			return "true"
@@ -37,7 +39,7 @@ class PowerState(Source):
 
 			elif type == 0:
 				print "[PowerState.py] Standby 0"
-				if inStandby == None:
+				if inStandby is None:
 					self.session.open(Standby)
 					return "true"
 				else:
@@ -46,14 +48,14 @@ class PowerState(Source):
 
 			elif type == 4:
 				print "[PowerState.py] Standby 4"
-				if inStandby != None:
+				if inStandby is not None:
 					inStandby.Power()
 					return "false"
 				else:
 					return "true"
 			elif type == 5:
 				print "[PowerState.py] Standby 5"
-				if inStandby == None:
+				if inStandby is None:
 					self.session.open(Standby)
 					return "true"
 				else:

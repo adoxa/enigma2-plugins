@@ -555,11 +555,6 @@ orfteletext/Makefile
 orfteletext/meta/Makefile
 orfteletext/src/Makefile
 
-oscaminfo/Makefile
-oscaminfo/meta/Makefile
-oscaminfo/po/Makefile
-oscaminfo/src/Makefile
-
 partnerbox/Makefile
 partnerbox/meta/Makefile
 partnerbox/po/Makefile
@@ -694,6 +689,7 @@ svdrp/Makefile
 svdrp/meta/Makefile
 svdrp/src/Makefile
 
+
 tageditor/Makefile
 tageditor/meta/Makefile
 tageditor/po/Makefile
@@ -793,6 +789,8 @@ webinterface/src/m/Makefile
 webinterface/src/mobile/Makefile
 webinterface/src/web/Makefile
 webinterface/src/web-data/Makefile
+webinterface/src/web-data/css/Makefile
+webinterface/src/web-data/fonts/Makefile
 webinterface/src/web-data/gfx/Makefile
 webinterface/src/web-data/img/Makefile
 webinterface/src/web-data/lib/Makefile
