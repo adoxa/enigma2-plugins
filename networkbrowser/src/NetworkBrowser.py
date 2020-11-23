@@ -20,6 +20,7 @@ import xml.dom.minidom
 from AutoMount import iAutoMount
 from MountEdit import AutoMountEdit
 from UserDialog import UserDialog
+from . import default_mount_options
 
 def formatIp(ip):
 	if ip is None or len(ip) != 4:
@@ -549,9 +550,9 @@ class NetworkBrowser(Screen):
 			if selection[0] == 'nfsShare':
 				# add data
 				data['mounttype'] = 'nfs'
+				data['options'] = default_mount_options['nfs']
 				data['sharename'] = (selection[1] or selection[2]) + '_' + (os.path.basename(selection[4]) or "root")
 				data['sharedir'] = selection[4]
-				data['options'] = "rw,nolock,tcp"
 
 				for sharename, sharedata in mounts.items():
 					if sharedata['ip'] == selection[2] and sharedata['sharedir'] in selection[4]:
@@ -560,9 +561,9 @@ class NetworkBrowser(Screen):
 			elif selection[0] == 'smbShare':
 				# add data
 				data['mounttype'] = 'cifs'
+				data['options'] = default_mount_options['cifs']
 				data['sharename'] = (selection[1] or selection[2]) + '_' + selection[3]
 				data['sharedir'] = selection[3]
-				data['options'] = "rw,utf8,vers=2.1"
 				data['username'] = ""
 				data['password'] = ""
 				self.sharecache_file = '/etc/enigma2/' + selection[2].strip() + '.cache'

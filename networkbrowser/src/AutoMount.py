@@ -8,6 +8,7 @@ from Components.Console import Console
 from Components.Harddisk import harddiskmanager #global harddiskmanager
 from xml.etree.cElementTree import parse as cet_parse
 from shutil import rmtree
+from . import default_mount_options
 
 XML_FSTAB = "/etc/enigma2/automounts.xml"
 
@@ -45,10 +46,7 @@ class AutoMount():
 			return definitions and definitions[-1].text or default
 
 		try:
-			default_options = {
-				"nfs": "rw,nolock,tcp",
-				"cifs": "rw,utf8,vers=2.1",
-			}[mounttype]
+			default_options = default_mount_options[mounttype]
 			default_sharedir = "/media/hdd/"
 			if mounttype == 'cifs':
 				username = getValue(mount.findall("username"), "guest").encode("UTF-8")

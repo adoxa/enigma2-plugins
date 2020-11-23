@@ -14,7 +14,7 @@ from Components.ActionMap import ActionMap, NumberActionMap
 from enigma import ePoint
 from AutoMount import iAutoMount, AutoMount
 from re import sub as re_sub
-
+from . import default_mount_options
 from boxbranding import getImageDistro
 
 class AutoMountEdit(Screen, ConfigListScreen):
@@ -160,10 +160,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		else:
 			ip = [192, 168, 0, 0]
 
-		if mounttype == "nfs":
-			defaultOptions = "rw,nolock,tcp"
-		else:
-			defaultOptions = "rw,utf8,vers=2.1"
+		defaultOptions = default_mount_options[mounttype]
 		if self.mountinfo.get('sharename'):
 			sharename = self.cleanSharename(self.mountinfo['sharename'])
 			self.old_sharename = self.mountinfo['sharename']
@@ -255,10 +252,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 
 	def newConfig(self):
 		if self["config"].getCurrent() == self.mounttypeEntry:
-			if self.mounttypeConfigEntry.value == "nfs":
-				defaultOptions = "rw,nolock,tcp"
-			else:
-				defaultOptions = "rw,utf8,vers=2.1"
+			defaultOptions = default_mount_options[self.mounttypeConfigEntry.value]
 			if self.mountinfo.has_key('options'):
 				options = self.mountinfo['options']
 			else:
