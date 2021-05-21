@@ -2,7 +2,9 @@
 # for localized messages
 from __init__ import _
 from Screens.Screen import Screen
+
 from Screens.VirtualKeyBoard import VirtualKeyBoard
+
 from Components.config import ConfigText, ConfigPassword, NoSave, getConfigListEntry
 from Components.ConfigList import ConfigListScreen
 from Components.Sources.Boolean import Boolean
@@ -12,6 +14,8 @@ from Components.ActionMap import ActionMap, NumberActionMap
 from enigma import ePoint
 from cPickle import dump, load
 import os
+
+
 
 def write_cache(cache_file, cache_data):
 	#Does a cPickle dump
@@ -24,12 +28,16 @@ def write_cache(cache_file, cache_data):
 	dump(cache_data, fd, -1)
 	fd.close()
 
+
+
+
 def load_cache(cache_file):
 	#Does a cPickle load
 	fd = open(cache_file)
 	cache_data = load(fd)
 	fd.close()
 	return cache_data
+
 
 class UserDialog(Screen, ConfigListScreen):
 	skin = """
@@ -42,7 +50,7 @@ class UserDialog(Screen, ConfigListScreen):
 			<widget source="VKeyIcon" render="Pixmap" pixmap="skin_default/buttons/key_text.png" position="10,280" zPosition="10" size="35,25" transparent="1" alphatest="on">
 				<convert type="ConditionalShowHide" />
 			</widget>
-			<widget name="HelpWindow" pixmap="skin_default/vkey_icon.png" position="410,330" zPosition="1" size="1,1" transparent="1" alphatest="on" />	
+			<widget name="HelpWindow" pixmap="skin_default/vkey_icon.png" position="410,330" zPosition="1" size="1,1" transparent="1" alphatest="on" />
 		</screen>"""
 
 	def __init__(self, session, plugin_path, hostinfo=None):
@@ -50,6 +58,7 @@ class UserDialog(Screen, ConfigListScreen):
 		self.session = session
 		Screen.__init__(self, self.session)
 		self.hostinfo = hostinfo
+
 		self.cache_file = '/etc/enigma2/' + self.hostinfo + '.cache'  # Path to cache directory
 		self.createConfig()
 
@@ -67,7 +76,7 @@ class UserDialog(Screen, ConfigListScreen):
 		}, -2)
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list,session = self.session)
+		ConfigListScreen.__init__(self, self.list, session=self.session)
 		self.createSetup()
 		self.onLayoutFinish.append(self.layoutFinished)
 		# Initialize Buttons
@@ -102,6 +111,7 @@ class UserDialog(Screen, ConfigListScreen):
 			except:
 				pass
 
+
 		self.username = NoSave(ConfigText(default=username, visible_width=50, fixed_size=False))
 		self.password = NoSave(ConfigPassword(default=password, visible_width=50, fixed_size=False))
 
@@ -118,11 +128,11 @@ class UserDialog(Screen, ConfigListScreen):
 
 	def KeyText(self):
 		if self["config"].getCurrent() == self.usernameEntry:
-			self.session.openWithCallback(lambda x : self.VirtualKeyBoardCallback(x, 'username'), VirtualKeyBoard, title = (_("Enter username:")), text = self.username.value)
+			self.session.openWithCallback(lambda x: self.VirtualKeyBoardCallback(x, 'username'), VirtualKeyBoard, title=(_("Enter username:")), text=self.username.value)
 		if self["config"].getCurrent() == self.passwordEntry:
-			self.session.openWithCallback(lambda x : self.VirtualKeyBoardCallback(x, 'password'), VirtualKeyBoard, title = (_("Enter password:")), text = self.password.value)
+			self.session.openWithCallback(lambda x: self.VirtualKeyBoardCallback(x, 'password'), VirtualKeyBoard, title=(_("Enter password:")), text=self.password.value)
 
-	def VirtualKeyBoardCallback(self, callback = None, entry = None):
+	def VirtualKeyBoardCallback(self, callback=None, entry=None):
 		if callback is not None and len(callback) and entry is not None and len(entry):
 			if entry == 'username':
 				self.username.setValue(callback)
@@ -145,10 +155,10 @@ class UserDialog(Screen, ConfigListScreen):
 		current = self["config"].getCurrent()
 		helpwindowpos = self["HelpWindow"].getPosition()
 		if current[1].help_window.instance is not None:
-			current[1].help_window.instance.move(ePoint(helpwindowpos[0],helpwindowpos[1]))
+			current[1].help_window.instance.move(ePoint(helpwindowpos[0], helpwindowpos[1]))
 
 	def ok(self):
-		self.hostdata = { 'username': self.username.value, 'password': self.password.value }
+
+		self.hostdata = {'username': self.username.value, 'password': self.password.value}
 		write_cache(self.cache_file, self.hostdata)
 		self.close(True)
-
