@@ -34,7 +34,4 @@ language.addCallback(localeInit())
 
 default_mount_options = defaultdict(str)
 default_mount_options["nfs"] = "rw,nolock,tcp"
-if getMachineBuild() == "inihdx":
-	default_mount_options["cifs"] = "rw,utf8"
-else:
-	default_mount_options["cifs"] = "rw,utf8,vers=2.1"
+default_mount_options["cifs"] = "rw,utf8"
