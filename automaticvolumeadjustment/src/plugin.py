@@ -29,10 +29,12 @@ from AutomaticVolumeAdjustment import AutomaticVolumeAdjustment
 from AutomaticVolumeAdjustmentConfig import saveVolumeDict
 from boxbranding import getImageDistro
 
+
 def autostart(reason, **kwargs):
 	if "session" in kwargs:
 		session = kwargs["session"]
 		AutomaticVolumeAdjustment(session)
+
 
 def autoend(reason, **kwargs):
 	# save config values for last used volume mode
@@ -41,17 +43,20 @@ def autoend(reason, **kwargs):
 			if AutomaticVolumeAdjustment.instance.enabled and AutomaticVolumeAdjustment.instance.mode != "0":
 				saveVolumeDict(AutomaticVolumeAdjustment.instance.serviceList)
 
+
 def setup(session, **kwargs):
 	session.open(AutomaticVolumeAdjustmentConfigScreen) # start setup
+
 
 def startSetup(menuid):
 	if getImageDistro() in ('openhdf', 'openatv'):
 		if menuid != "audio_menu":
-			return [ ]
+			return []
 	else:
 		if menuid != "system": # show setup only in system level menu
 			return []
 	return [(_("Automatic Volume Adjustment"), setup, "AutomaticVolumeAdjustment", 46)]
+
 
 def Plugins(**kwargs):
 	return [
