@@ -233,6 +233,7 @@ class NetworkBrowser(Screen):
 	def makeStrIP(self):
 		self.IP = iNetwork.getAdapterAttribute(self.iface, "ip")
 		self.netmask = iNetwork.getAdapterAttribute(self.iface, "netmask")
+		print "[Networkbrowser] iface %s, ip %s, netmask %s" % (self.iface, self.IP, self.netmask)
 		if self.IP and self.netmask and len(self.IP) == 4 and len(self.netmask) == 4 and sum(self.IP) and sum(self.netmask):
 			strCIDR = str(sum((bin(x).count('1') for x in self.netmask)))
 			strIP = '.'.join((str(ip & mask) for ip, mask in zip(self.IP, self.netmask))) + "/" + strCIDR
@@ -256,7 +257,7 @@ class NetworkBrowser(Screen):
 				if strIP:
 					self.Console.ePopen("nmap -oX - " + strIP + ' -p 445,2049 2>/dev/null', self.nmapComplete)
 				else:
-					self.session.open(MessageBox, _("Your network interface %s is not properly configured, so a network scan can not be done.\nPlease configure the interface and try again.") % self.iface, type=MessageBox.TYPE_ERROR)
+					self.session.open(MessageBox, _("Can not scan network because interface is not properly configured.\n\nInterface %s, IP %s, Netmask %s\n\nPlease configure the interface and try again.") % (self.iface, self.IP, self.netmask), type=MessageBox.TYPE_ERROR)
 					self.setStatus('error')
 					self["shortcuts"].setEnabled(True)
 					return
