@@ -1,3 +1,4 @@
+from __future__ import print_function
 # FanControl2
 # joergm6 IHAD
 # PID-controller by Lukasz S.
@@ -76,7 +77,7 @@ def skal(x, x1, x2, y1, y2):
 
 def FClog(wert):
 	if config.plugins.FanControl.EnableConsoleLog.value:
-		print "[FanControl2]", wert
+		print("[FanControl2]", wert)
 	while len(FC2Log) > config.plugins.FanControl.LogCount.value:
 		del FC2Log[5]
 	FC2Log.append(strftime("%H:%M:%S ") + wert)
@@ -597,7 +598,7 @@ class FanControl2SpezialSetup(Screen, ConfigListScreen):
 			sel = self["config"].getCurrent()[1]
 			if sel == config.plugins.FanControl.LogPath:
 				self.session.openWithCallback(self.dirSelected, LocationBox, text=_("Choose path"), filename="", currDir=self["config"].getCurrent()[1].value, minFree=50)
-		except Exception, e:
+		except Exception as e:
 			self.session.open(MessageBox, "Error:\n" + str(e), MessageBox.TYPE_ERROR)
 
 	def dirSelected(self, dir):

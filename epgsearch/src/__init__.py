@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from Components.Language import language
 from Components.NimManager import nimmanager
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE
@@ -22,7 +23,7 @@ def _(txt):
 	if gettext.dgettext(PluginLanguageDomain, txt):
 		return gettext.dgettext(PluginLanguageDomain, txt)
 	else:
-		print "[" + PluginLanguageDomain + "] fallback to default translation for " + txt
+		print("[" + PluginLanguageDomain + "] fallback to default translation for " + txt)
 		return gettext.gettext(txt)
 
 
@@ -33,7 +34,7 @@ config.plugins.epgsearch.showinplugins = ConfigYesNo(default=False)
 __searchDefaultScope = "currentbouquet" if getImageDistro() in ("easy-gui-aus", "beyonwiz") else "all"
 config.plugins.epgsearch.scope = ConfigSelection(choices=[("all", _("all services")), ("allbouquets", _("all bouquets")), ("currentbouquet", _("current bouquet")), ("currentservice", _("current service")), ("ask", _("ask user"))], default=__searchDefaultScope)
 config.plugins.epgsearch.defaultscope = ConfigSelection(choices=[("all", _("all services")), ("allbouquets", _("all bouquets")), ("currentbouquet", _("current bouquet")), ("currentservice", _("current service"))], default=__searchDefaultScope)
-config.plugins.epgsearch.search_type = ConfigSelection(default="partial", choices=[("partial", _("partial match")), ("exact", _("exact match")), ("start", _("title starts with"))])
+config.plugins.epgsearch.search_type = ConfigSelection(default="partial", choices=[("partial", _("partial match")), ("partialdes", _("partial description")), ("exact", _("exact match")), ("start", _("title starts with"))])
 config.plugins.epgsearch.search_case = ConfigSelection(default="insensitive", choices=[("insensitive", _("case-insensitive search")), ("sensitive", _("case-sensitive search"))])
 allowShowOrbital = getImageDistro() not in ("easy-gui-aus", "beyonwiz")
 config.plugins.epgsearch.showorbital = ConfigYesNo(default=allowShowOrbital)

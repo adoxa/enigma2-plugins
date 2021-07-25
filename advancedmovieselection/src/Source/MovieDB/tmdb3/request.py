@@ -8,6 +8,7 @@
 #          TMDb v3 API
 #-----------------------
 
+from __future__ import print_function
 from tmdb_exceptions import *
 from locales import get_locale
 from cache import Cache
@@ -92,11 +93,11 @@ class Request(urllib2.Request):
         """Open a file object to the specified URL."""
         try:
             if DEBUG:
-                print 'loading ' + self.get_full_url()
+                print('loading ' + self.get_full_url())
                 if self.has_data():
-                    print '  ' + self.get_data()
+                    print('  ' + self.get_data())
             return urllib2.urlopen(self)
-        except urllib2.HTTPError, e:
+        except urllib2.HTTPError as e:
             raise TMDBHTTPError(e)
 
     def read(self):
@@ -110,7 +111,7 @@ class Request(urllib2.Request):
         try:
             # catch HTTP error from open()
             data = json.load(self.open())
-        except TMDBHTTPError, e:
+        except TMDBHTTPError as e:
             try:
                 # try to load whatever was returned
                 data = json.loads(e.response)

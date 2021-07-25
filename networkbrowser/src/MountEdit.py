@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # for localized messages
+from __future__ import print_function
 from __init__ import _
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -57,6 +58,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 			"red": self.close,
 			"green": self.ok,
 		}, -2)
+
 
 
 		self.list = []
@@ -170,6 +172,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 			self.old_sharename = self.mountinfo['sharename']
 
 
+
 		else:
 			sharename = ""
 			self.old_sharename = None
@@ -260,6 +263,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		if self["config"].getCurrent() == self.mounttypeEntry:
 			defaultOptions = default_mount_options[self.mounttypeConfigEntry.value]
 
+
 			if 'options' in self.mountinfo:
 				options = self.mountinfo['options']
 			else:
@@ -290,6 +294,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		self.ShowHelp()
 
 
+
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
 		self.newConfig()
@@ -297,6 +302,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 	def keyRight(self):
 		ConfigListScreen.keyRight(self)
 		self.newConfig()
+
 
 
 
@@ -331,6 +337,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 			sharedir = None
 			sharename = self.cleanSharename(self.sharenameConfigEntry.value)
 			xml_sharename = self.old_sharename
+
 
 
 			if self.sharedirConfigEntry.value.startswith("/"):

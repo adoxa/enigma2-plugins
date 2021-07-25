@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # for localized messages
+from __future__ import print_function
 from __init__ import _
 from Screens.Screen import Screen
 
@@ -17,16 +18,18 @@ import os
 
 
 
+
 def write_cache(cache_file, cache_data):
 	#Does a cPickle dump
 	if not os.path.isdir(os.path.dirname(cache_file)):
 		try:
 			os.mkdir(os.path.dirname(cache_file))
 		except OSError as e:
-			print "[Networkbrowser] Can not create cache file directory %s: %s" % (os.path.dirname(cache_file), str(e))
+			print("[Networkbrowser] Can not create cache file directory %s: %s" % (os.path.dirname(cache_file), str(e)))
 	fd = open(cache_file, 'w')
 	dump(cache_data, fd, -1)
 	fd.close()
+
 
 
 
@@ -103,13 +106,14 @@ class UserDialog(Screen, ConfigListScreen):
 		password = ""
 
 		if os.path.exists(self.cache_file):
-			print 'Loading user cache from', self.cache_file
+			print('Loading user cache from', self.cache_file)
 			try:
 				self.hostdata = load_cache(self.cache_file)
 				username = self.hostdata['username']
 				password = self.hostdata['password']
 			except:
 				pass
+
 
 
 		self.username = NoSave(ConfigText(default=username, visible_width=50, fixed_size=False))

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from enigma import eTimer, eWidget, eRect, eServiceReference, iServiceInformation, iPlayableService, eServiceCenter
 from Screens.Screen import Screen
 from Screens.ServiceInfo import ServiceInfoList, ServiceInfoListEntry
@@ -35,8 +36,8 @@ try:
 	from Plugins.Extensions.VlcPlayer.VlcServerConfig import vlcServerConfig, VlcServerConfigScreen
 	from Plugins.Extensions.VlcPlayer.VlcServerList import VlcServerList
 	from Plugins.Extensions.VlcPlayer.VlcPlayer import VlcPlayer
-except Exception, e:
-	print "Media Center: Import VLC Stuff failed"
+except Exception as e:
+	print("Media Center: Import VLC Stuff failed")
 
 
 def addFavoriteVLCFolders():
@@ -234,7 +235,7 @@ class MC_VLCMedialist(Screen):
 		try:
 			for id in self.playlistIds:
 				self.server.delete(id)
-		except Exception, e:
+		except Exception as e:
 			pass
 
 	def __onShown(self):
@@ -249,7 +250,7 @@ class MC_VLCMedialist(Screen):
 				self.switchToPlayList()
 			else:
 				self.switchToFileList()
-		except Exception, e:
+		except Exception as e:
 			self.session.open(
 				MessageBox, _("Error updating file- and playlist from server %s:\n%s" % (
 						self.server.getName(), e)
@@ -272,7 +273,7 @@ class MC_VLCMedialist(Screen):
 			self["key_blue"].setText("Filter On")
 		try:
 			self.updateFilelist()
-		except Exception, e:
+		except Exception as e:
 			self.session.open(
 				MessageBox, _("Error updating filelist from server %s:\n%s" % (
 						self.server.getName(), e)
@@ -319,7 +320,7 @@ class MC_VLCMedialist(Screen):
 					if id is not None:
 						self.playlistIds.append(id)
 						self.updatePlaylist()
-				except Exception, e:
+				except Exception as e:
 					self.session.open(
 						MessageBox, _("Error loading playlist %s into server %s:\n%s" % (
 								media, self.server.getName(), e)
@@ -345,14 +346,14 @@ class MC_VLCMedialist(Screen):
 			self.filename = self.filelist.getCurrent()[0][0]
 		try:
 			url = self.server.playFile(self.filename, DEFAULT_VIDEO_PID, DEFAULT_AUDIO_PID)
-			print "[VLC] url: " + url
-		except Exception, e:
+			print("[VLC] url: " + url)
+		except Exception as e:
 			self.session.open(MessageBox, _("Error with VLC server:\n%s" % e), MessageBox.TYPE_ERROR)
 
 		if url is not None:
 			#self.session.open(MessageBox, _("OPEN URL:\n%s" % url), MessageBox.TYPE_INFO)
 			sref = eServiceReference(ENIGMA_SERVICE_ID, 0, url)
-			print "sref valid=", sref.valid()
+			print("sref valid=", sref.valid())
 			sref.setData(0, DEFAULT_VIDEO_PID)
 			sref.setData(1, DEFAULT_AUDIO_PID)
 			self.session.nav.stopService()
@@ -367,13 +368,13 @@ class MC_VLCMedialist(Screen):
 	def getFilesAndDirsCB(self, currentDirectory, regex):
 		try:
 			return self.server.getFilesAndDirs(currentDirectory, regex)
-		except ExpatError, e:
+		except ExpatError as e:
 			self.session.open(
 				MessageBox, _("Error loading playlist into server %s:\n%s" % (
 						self.server.getName(), e)
 					), MessageBox.TYPE_ERROR)
 			raise ExpatError, e
-		except Exception, e:
+		except Exception as e:
 			self.session.open(
 				MessageBox, _("Error loading filelist into server %s:\n%s" % (
 						self.server.getName(), e)
@@ -383,12 +384,12 @@ class MC_VLCMedialist(Screen):
 	def getPlaylistEntriesCB(self):
 		try:
 			return self.server.getPlaylistEntries()
-		except ExpatError, e:
+		except ExpatError as e:
 			self.session.open(
 				MessageBox, _("Error loading playlist into server %s:\n%s" % (
 						self.server.getName(), e)
 					), MessageBox.TYPE_ERROR)
-		except Exception, e:
+		except Exception as e:
 			self.session.open(
 				MessageBox, _("Error loading playlist into server %s:\n%s" % (
 						self.server.getName(), e)
@@ -455,11 +456,11 @@ class MC_VLCMedialist(Screen):
 		self.session.openWithCallback(self.JumpToFolder, MC_VLCFavoriteFolders)
 
 	def changeDir(self, dir):
-		print "[VLC] changeDir ", dir
+		print("[VLC] changeDir ", dir)
 		try:
 			self.currentList.changeDirectory(dir)
 			self.updateFilelist()
-		except Exception, e:
+		except Exception as e:
 			self.session.open(MessageBox, _("Error switching directory:\n%s" % (e)), MessageBox.TYPE_ERROR)
 
 	def visibility(self, force=1):
@@ -563,19 +564,19 @@ class MC_VLCFavoriteFolders(Screen):
 		for i in range(0, 100):
 			try:
 				del(config.plugins.mc_vlc.folders[i])
-			except Exception, e:
-				print "MC_ResetAll-DelaFavFailed"
+			except Exception as e:
+				print("MC_ResetAll-DelaFavFailed")
 		config.plugins.mc_vlc.folders.save()
 		try:
 			del(config.plugins.mc_vlc.folders)
-		except Exception, e:
-			print "MC_DELFAVFOLDERS-FAILED"
+		except Exception as e:
+			print("MC_DELFAVFOLDERS-FAILED")
 			#self.session.open(MessageBox,("Error: %s\n") % (Exception),  MessageBox.TYPE_INFO)
 		try:
 			del(config.plugins.mc_vlc.folders[0])
-		except Exception, e:
+		except Exception as e:
 			#self.session.open(MessageBox,("Error: %s\n") % (Exception),  MessageBox.TYPE_INFO)
-			print "MC_DELFAV0-FAILED"
+			print("MC_DELFAV0-FAILED")
 
 		config.plugins.mc_vlc.folders.save()
 		configfile.save()
@@ -640,8 +641,8 @@ class FavoriteFolderAdd(Screen, ConfigListScreen):
 	def keyCancel(self):
 		try:
 			del(config.plugins.mc_vlc.folders[self.id])
-		except Exception, e:
-			print "MC_Settings_DelaFavFailed"
+		except Exception as e:
+			print("MC_Settings_DelaFavFailed")
 		self.close(0)
 #------------------------------------------------------------------------------------------
 
@@ -706,7 +707,7 @@ class FolderOptions(Screen):
 		}, -1)
 
 	def okbuttonClick(self):
-		print "okbuttonClick"
+		print("okbuttonClick")
 		selection = self["menu"].getCurrent()
 		if selection is not None:
 			if selection[1] == "addtofav":

@@ -6,6 +6,7 @@
 # Version: 1.5
 # Support: www.dreambox-plugins.de
 #####################################################
+from __future__ import print_function
 from Components.ActionMap import ActionMap
 from Components.ConfigList import ConfigList, ConfigListScreen
 from Components.config import config, configfile, getConfigListEntry, ConfigSubsection, ConfigYesNo, ConfigInteger, ConfigSelection, NoSave
@@ -62,7 +63,7 @@ def _(txt):
 	if gettext.dgettext(PluginLanguageDomain, txt):
 		return gettext.dgettext(PluginLanguageDomain, txt)
 	else:
-		print "[" + PluginLanguageDomain + "] fallback to default translation for " + txt
+		print("[" + PluginLanguageDomain + "] fallback to default translation for " + txt)
 		return gettext.gettext(txt)
 
 
@@ -635,7 +636,7 @@ class InfoBar(InfoBarOrg):
 						statinfo = os_stat("%s/%s" % (config.usage.timeshift_path.value, filename))
 						if statinfo.st_mtime > (time() - 5.0):
 							savefilename = filename
-					except Exception, errormsg:
+					except Exception as errormsg:
 						Notifications.AddNotification(MessageBox, _("PTS Plugin Error: %s" % (errormsg)), MessageBox.TYPE_ERROR)
 
 		if savefilename is None:
@@ -665,8 +666,8 @@ class InfoBar(InfoBarOrg):
 								ptsfilename = "%s - %s - %s - %s" % (strftime("%Y%m%d %H%M", localtime(self.pts_starttime)), self.pts_curevent_station, self.pts_curevent_name, self.pts_curevent_description)
 							elif config.recording.filename_composition.value == "short":
 								ptsfilename = "%s - %s" % (strftime("%Y%m%d", localtime(self.pts_starttime)), self.pts_curevent_name)
-					except Exception, errormsg:
-						print "PTS-Plugin: Using default filename"
+					except Exception as errormsg:
+						print("PTS-Plugin: Using default filename")
 
 					if config.recording.ascii_filenames.value:
 						ptsfilename = ASCIItranslit.legacyEncode(ptsfilename)
@@ -693,8 +694,8 @@ class InfoBar(InfoBarOrg):
 								ptsfilename = "%s - %s - %s - %s" % (strftime("%Y%m%d %H%M", localtime(int(begintime))), self.pts_curevent_station, eventname, description)
 							elif config.recording.filename_composition.value == "short":
 								ptsfilename = "%s - %s" % (strftime("%Y%m%d", localtime(int(begintime))), eventname)
-					except Exception, errormsg:
-						print "PTS-Plugin: Using default filename"
+					except Exception as errormsg:
+						print("PTS-Plugin: Using default filename")
 
 					if config.recording.ascii_filenames.value:
 						ptsfilename = ASCIItranslit.legacyEncode(ptsfilename)
@@ -715,7 +716,7 @@ class InfoBar(InfoBarOrg):
 				if not mergelater:
 					self.ptsCreateAPSCFiles(fullname + ".ts")
 
-			except Exception, errormsg:
+			except Exception as errormsg:
 				timeshift_saved = False
 				timeshift_saveerror1 = errormsg
 
@@ -778,7 +779,7 @@ class InfoBar(InfoBarOrg):
 						timeshift_saveerror1 = ""
 						timeshift_saveerror2 = _("Not enough free Diskspace!\n\nFilesize: %sMB\nFree Space: %sMB\nPath: %s" % (filesize, freespace, config.usage.default_path.value))
 
-				except Exception, errormsg:
+				except Exception as errormsg:
 					timeshift_saved = False
 					timeshift_saveerror2 = errormsg
 
@@ -799,7 +800,7 @@ class InfoBar(InfoBarOrg):
 					statinfo = os_stat("%s/%s" % (config.usage.timeshift_path.value, filename))
 					# if no write for 5 sec = stranded timeshift
 					if statinfo.st_mtime < (time() - 5.0):
-						print "PTS-Plugin: Erasing stranded timeshift %s" % filename
+						print("PTS-Plugin: Erasing stranded timeshift %s" % filename)
 						self.BgFileEraser.erase("%s/%s" % (config.usage.timeshift_path.value, filename))
 
 						# Delete Meta and EIT File too
@@ -807,7 +808,7 @@ class InfoBar(InfoBarOrg):
 							self.BgFileEraser.erase("%s/%s.meta" % (config.usage.timeshift_path.value, filename))
 							self.BgFileEraser.erase("%s/%s.eit" % (config.usage.timeshift_path.value, filename))
 		except:
-			print "PTS: IO-Error while cleaning Timeshift Folder ..."
+			print("PTS: IO-Error while cleaning Timeshift Folder ...")
 
 	def ptsGetEventInfo(self):
 		event = None
@@ -822,7 +823,7 @@ class InfoBar(InfoBarOrg):
 			service = self.session.nav.getCurrentService()
 			info = service and service.info()
 			event = info and info.getEvent(0)
-		except Exception, errormsg:
+		except Exception as errormsg:
 			Notifications.AddNotification(MessageBox, _("Getting Event Info failed!") + "\n\n%s" % errormsg, MessageBox.TYPE_ERROR, timeout=10)
 
 		if event is not None:
@@ -852,8 +853,8 @@ class InfoBar(InfoBarOrg):
 					open("/proc/stb/fp/led_set_pattern", "w").write("0")
 				elif fileExists("/proc/stb/fp/led0_pattern"):
 					open("/proc/stb/fp/led0_pattern", "w").write("0")
-		except Exception, errormsg:
-			print "PTS Plugin: %s" % (errormsg)
+		except Exception as errormsg:
+			print("PTS Plugin: %s" % (errormsg))
 
 	def ptsCreateHardlink(self):
 		for filename in os_listdir(config.usage.timeshift_path.value):
@@ -864,8 +865,8 @@ class InfoBar(InfoBarOrg):
 						try:
 							self.BgFileEraser.erase("%s/pts_livebuffer.%s" % (config.usage.timeshift_path.value, self.pts_eventcount))
 							self.BgFileEraser.erase("%s/pts_livebuffer.%s.meta" % (config.usage.timeshift_path.value, self.pts_eventcount))
-						except Exception, errormsg:
-							print "PTS Plugin: %s" % (errormsg)
+						except Exception as errormsg:
+							print("PTS Plugin: %s" % (errormsg))
 
 						try:
 							# Create link to pts_livebuffer file
@@ -875,7 +876,7 @@ class InfoBar(InfoBarOrg):
 							metafile = open("%s/pts_livebuffer.%s.meta" % (config.usage.timeshift_path.value, self.pts_eventcount), "w")
 							metafile.write("%s\n%s\n%s\n%i\n" % (self.pts_curevent_servicerefname, self.pts_curevent_name.replace("\n", ""), self.pts_curevent_description.replace("\n", ""), int(self.pts_starttime)))
 							metafile.close()
-						except Exception, errormsg:
+						except Exception as errormsg:
 							Notifications.AddNotification(MessageBox, _("Creating Hardlink to Timeshift file failed!") + "\n" + _("The Filesystem on your Timeshift-Device does not support hardlinks.\nMake sure it is formated in EXT2 or EXT3!") + "\n\n%s" % errormsg, MessageBox.TYPE_ERROR)
 
 						# Create EIT File
@@ -890,9 +891,9 @@ class InfoBar(InfoBarOrg):
 								metafile = open("%s.ts.meta" % (fullname), "w")
 								metafile.write("%s\n%s\n%s\n%i\nautosaved\n" % (self.pts_curevent_servicerefname, self.pts_curevent_name.replace("\n", ""), self.pts_curevent_description.replace("\n", ""), int(self.pts_starttime)))
 								metafile.close()
-							except Exception, errormsg:
-								print "PTS Plugin: %s" % (errormsg)
-				except Exception, errormsg:
+							except Exception as errormsg:
+								print("PTS Plugin: %s" % (errormsg))
+				except Exception as errormsg:
 					errormsg = str(errormsg)
 					if errormsg.find('Input/output error') != -1:
 						errormsg += _("\nAn Input/output error usually indicates a corrupted filesystem! Please check the filesystem of your timeshift-device!")
@@ -992,8 +993,8 @@ class InfoBar(InfoBarOrg):
 				import eitsave
 				serviceref = ServiceReference(self.session.nav.getCurrentlyPlayingServiceReference()).ref.toString()
 				eitsave.SaveEIT(serviceref, filename + ".eit", self.pts_curevent_eventid, -1, -1)
-			except Exception, errormsg:
-				print "PTS Plugin: %s" % (errormsg)
+			except Exception as errormsg:
+				print("PTS Plugin: %s" % (errormsg))
 
 	def ptsCopyFilefinished(self, srcfile, destfile):
 		# Erase Source File
@@ -1209,7 +1210,7 @@ class InfoBar(InfoBarOrg):
 					self.pvrStateDialog["eventname"].setText(eventname)
 				else:
 					self.pvrStateDialog["eventname"].setText("")
-			except Exception, errormsg:
+			except Exception as errormsg:
 				self.pvrStateDialog["eventname"].setText("")
 
 		# Get next pts file ...
@@ -1241,7 +1242,7 @@ class InfoBar(InfoBarOrg):
 		try:
 			ts.setNextPlaybackFile("%s/%s" % (config.usage.timeshift_path.value, nexttsfile))
 		except:
-			print "PTS-Plugin: setNextPlaybackFile() not supported by OE. Enigma2 too old !?"
+			print("PTS-Plugin: setNextPlaybackFile() not supported by OE. Enigma2 too old !?")
 
 	def ptsSeekBackHack(self):
 		if not config.plugins.pts.enabled.value or not self.timeshift_enabled:

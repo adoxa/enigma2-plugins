@@ -29,6 +29,7 @@
 encode(in_file, out_file [,name, mode])
 decode(in_file [, out_file, mode])
 """
+from __future__ import print_function
 
 import binascii
 import os
@@ -134,7 +135,7 @@ def decode(in_file, out_file=None, mode=None, quiet=0):
     while s and s.strip() != 'end':
         try:
             data = binascii.a2b_uu(s)
-        except binascii.Error, v:
+        except binascii.Error as v:
             # Workaround for broken uuencoders by /Fredrik Lundh
             nbytes = (((ord(s[0]) - 32) & 63) * 4 + 5) // 3
             data = binascii.a2b_uu(s[:nbytes])
@@ -173,7 +174,7 @@ def test():
             if isinstance(output, basestring):
                 output = open(output, 'w')
             else:
-                print sys.argv[0], ': cannot do -t to stdout'
+                print(sys.argv[0], ': cannot do -t to stdout')
                 sys.exit(1)
         decode(input, output)
     else:
@@ -181,7 +182,7 @@ def test():
             if isinstance(input, basestring):
                 input = open(input, 'r')
             else:
-                print sys.argv[0], ': cannot do -t from stdin'
+                print(sys.argv[0], ': cannot do -t from stdin')
                 sys.exit(1)
         encode(input, output)
 

@@ -1,3 +1,4 @@
+from __future__ import print_function
 #######################################################################
 #
 #    EasyMedia for Dreambox-Enigma2
@@ -250,7 +251,7 @@ class AddPlug(Screen):
 
 	def save(self):
 		plugin = self["pluginlist"].getCurrent()[0]
-		print plugin
+		print(plugin)
 		plugin.icon = None
 		if not fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EasyMedia/" + plugin.name + ".plug"):
 			try:
@@ -383,8 +384,7 @@ class EasyMedia(Screen):
 			self.__keys.append("myvideo")
 			MPaskList.append((_("MyVideo"), "MYVIDEO"))
 		plist = os_listdir("/usr/lib/enigma2/python/Plugins/Extensions/EasyMedia")
-		plist = [x[:-5] for x in plist if x.endswith('.plug')]
-		plist.sort()
+		plist = sorted([x[:-5] for x in plist if x.endswith('.plug')])
 		for onePlug in plist:
 			try:
 				inpf = open(("/usr/lib/enigma2/python/Plugins/Extensions/EasyMedia/" + onePlug + ".plug"), 'rb')

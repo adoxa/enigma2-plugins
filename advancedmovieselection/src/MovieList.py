@@ -19,6 +19,7 @@
 #  modify it (if you keep the license), but it may not be commercially
 #  distributed other than under the conditions noted above.
 #
+from __future__ import print_function
 from __init__ import _
 from Components.GUIComponent import GUIComponent
 from Tools.FuzzyDate import FuzzyTime
@@ -283,9 +284,9 @@ class MovieList(GUIComponent):
     def unmount(self, service):
         from os import system
         cmd = 'umount "%s"' % (service.getPath())
-        print cmd
+        print(cmd)
         res = system(cmd) >> 8
-        print res
+        print(res)
         if res == 0:
             self.hotplugServices.remove(service)
             if movieScanner.enabled:
@@ -804,8 +805,8 @@ class MovieList(GUIComponent):
             for i, x in enumerate(self.multiSelection):
                 if x == service:
                     del self.multiSelection[i]
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
         for l in self.list[:]:
             if l[0].serviceref == service:
                 self.list.remove(l)
@@ -815,7 +816,7 @@ class MovieList(GUIComponent):
         return len(self.list)
 
     def loadMovieLibrary(self, root, filter_tags):
-        print "loadMovieLibrary:", root.getPath()
+        print("loadMovieLibrary:", root.getPath())
         self.list = []
         self.multiSelection = []
 
@@ -840,9 +841,9 @@ class MovieList(GUIComponent):
             self.loadMovieLibrary(root, filter_tags)
             return
 
-        print "load:", root.getPath()
+        print("load:", root.getPath())
         if root.type != eServiceReference.idFile:
-            print "current type", root.type, "set to", eServiceReference.idFile
+            print("current type", root.type, "set to", eServiceReference.idFile)
             root.type = eServiceReference.idFile
 
         # this lists our root service, then building a nice list
@@ -853,13 +854,13 @@ class MovieList(GUIComponent):
 
         list = self.serviceHandler.list(root)
         if list is None:
-            print "listing of movies failed"
+            print("listing of movies failed")
             return
         tags = set()
 
         dirs = []
 
-        while 1:
+        while True:
             serviceref = list.getNext()
             if not serviceref.valid():
                 break
@@ -914,7 +915,7 @@ class MovieList(GUIComponent):
             info = self.serviceHandler.info(serviceref)
 
             if dvd is not None:
-                begin = long(os.stat(dvd).st_mtime)
+                begin = int(os.stat(dvd).st_mtime)
             else:
                 begin = info.getInfo(serviceref, iServiceInformation.sTimeCreate)
 
@@ -1148,7 +1149,7 @@ class MovieList(GUIComponent):
                 if status:
                     x = self.list[cur_idx]
                     length = x[0].info.getLength(x[0].serviceref)
-                    new = (long(length * 90000), 3)
+                    new = (int(length * 90000), 3)
                     cutList.append(new)
                 result = cue.setCutList(cutList)
                 self.l.invalidateEntry(cur_idx)
