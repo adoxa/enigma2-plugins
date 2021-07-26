@@ -1,3 +1,4 @@
+from __future__ import print_function
 import urllib
 from twisted.web.client import getPage
 from xml.dom.minidom import parseString
@@ -42,8 +43,8 @@ def applySkinVars(skin, dict):
     for key in dict.keys():
         try:
             skin = skin.replace('{' + key + '}', dict[key])
-        except Exception, e:
-            print e, "@key=", key
+        except Exception as e:
+            print(e, "@key=", key)
     return skin
 
 
@@ -101,13 +102,13 @@ class GoogleMapsConfigScreen(ConfigListScreen, Screen):
         }, -2)
 
     def save(self):
-        print "saving"
+        print("saving")
         for x in self["config"].list:
             x[1].save()
         self.close(True)
 
     def cancel(self):
-        print "cancel"
+        print("cancel")
         for x in self["config"].list:
             x[1].cancel()
         self.close(False)
@@ -301,7 +302,7 @@ class GoogleMapsMainScreen(Screen, HelpableScreen):
         self["placeslist"].setList(list)
 
     def openFolderRoot(self, name, filepath):
-        print "openFolderRoot", name, filepath
+        print("openFolderRoot", name, filepath)
         root = RootFolder()
         folderx = root.getFolderFromFile(filepath)
         list = []
@@ -318,7 +319,7 @@ class GoogleMapsMainScreen(Screen, HelpableScreen):
         self["placeslist"].setList(list)
 
     def openFolder(self, name, foldery):
-        print "open Folder", name, foldery
+        print("open Folder", name, foldery)
         list = []
         if foldery.parent is None:
             l = lambda name, folder: self.buildMenuRoot()
@@ -416,7 +417,7 @@ class GoogleMapsMainScreen(Screen, HelpableScreen):
 
     #################
     def setNewXYZ(self, x, y, z):
-        print x, y, z
+        print(x, y, z)
         if z < 0 or z >= 30:
             return
         self.x = x
@@ -617,7 +618,7 @@ class GoogleMapsGeoSearchScreen(InputBox):
             self["infotext"].setText("nothing found with '%s'" % (searchkey))
 
     def onLoadFailed(self, reason):
-        print reason
+        print(reason)
         self["infotext"].setText(str(reason))
 
 ##################################

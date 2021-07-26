@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # for localized messages
 #from __init__ import _
+from __future__ import print_function
 import os
 
 from enigma import eTimer
@@ -21,8 +22,8 @@ def rm_rf(d): # only for removing the ipkg stuff from /media/hdd subdirs
 			else:
 				os.unlink(path)
 		os.rmdir(d)
-	except Exception, ex:
-		print "AutoMount failed to remove", d, "Error:", ex
+	except Exception as ex:
+		print("AutoMount failed to remove", d, "Error:", ex)
 
 
 class AutoMount():
@@ -70,8 +71,8 @@ class AutoMount():
 				'username': username,
 				'password': password,
 			}
-		except Exception, e:
-			print "[MountManager] Error reading Mounts:", e
+		except Exception as e:
+			print("[MountManager] Error reading Mounts:", e)
 		else:
 			self.automounts[data['sharename']] = data
 
@@ -89,6 +90,7 @@ class AutoMount():
 		file = open(XML_FSTAB, 'r')
 		tree = cet_parse(file).getroot()
 		file.close()
+
 
 
 
@@ -140,9 +142,21 @@ class AutoMount():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 		self.checkList = self.automounts.keys()
 		if not self.checkList:
-			# print "[NetworkBrowser] self.automounts without mounts",self.automounts
+			# print("[NetworkBrowser] self.automounts without mounts", self.automounts)
 			if callback is not None:
 				callback(True)
 		else:
@@ -223,6 +237,7 @@ class AutoMount():
 			if data['active'] == 'True' or data['active'] is True:
 				if data['mountusing'] == 'fstab':
 
+
 					if data['mounttype'] == 'nfs':
 						tmpcmd = 'mount ' + data['ip'] + ':/' + data['sharedir']
 					elif data['mounttype'] == 'cifs':
@@ -244,6 +259,7 @@ class AutoMount():
 						mountcommand = tmpcmd.encode("UTF-8")
 
 
+
 		for x in unmountcommand:
 			command.append(x)
 		if not os.path.exists(path) and data['mountusing'] != 'autofs':
@@ -258,14 +274,14 @@ class AutoMount():
 				command.append('sleep 2')
 			command.append(self.autofsreload)
 			self.autofsreload = None
-		print 'command',command
+		print('command', command)
 		if command:
 			self.MountConsole.eBatch(command, self.CheckMountPointFinished, [data, callback, restart], debug=True)
 		else:
 			self.CheckMountPointFinished([data, callback, restart])
 
 	def CheckMountPointFinished(self, extra_args):
-# 		print "[NetworkBrowser] CheckMountPointFinished"
+# 		print("[NetworkBrowser] CheckMountPointFinished")
 		(data, callback, restart) = extra_args
 		hdd_dir = '/media/hdd'
 		sharepath = os.path.join('/media/net', data['sharename'])
@@ -303,8 +319,8 @@ class AutoMount():
 						try:
 							rmtree(path)
 							harddiskmanager.removeMountedPartition(path)
-						except Exception, ex:
-							print "Failed to remove", path, "Error:", ex
+						except Exception as ex:
+							print("Failed to remove", path, "Error:", ex)
 		if self.checkList:
 			# Go to next item in list...
 			self.doCheckMountPoint(self.checkList.pop(), callback, restart)
@@ -402,9 +418,9 @@ class AutoMount():
 			f = open(XML_FSTAB, "w")
 			f.writelines(xmldata)
 			f.close()
-			# print "[NetworkBrowser] Saving Mounts List:"
-		except Exception, e:
-			print "[NetworkBrowser] Error Saving Mounts List:", e
+			# print("[NetworkBrowser] Saving Mounts List:")
+		except Exception as e:
+			print("[NetworkBrowser] Error Saving Mounts List:", e)
 
 	def writeMountsConfig(self):
 		self.writeAutoMountsXML()
@@ -454,12 +470,14 @@ class AutoMount():
 					out.close()
 
 
+
+
 	def stopMountConsole(self):
 		if self.MountConsole is not None:
 			self.MountConsole = None
 
 	def removeMount(self, mountpoint, callback=None):
-# 		print "[NetworkBrowser] removing mount: ",mountpoint
+# 		print("[NetworkBrowser] removing mount: ", mountpoint)
 		self.newautomounts = {}
 		for sharename, sharedata in self.automounts.items():
 			sharepath = os.path.join('/media/net', sharedata['sharename'])
@@ -495,7 +513,7 @@ class AutoMount():
 
 		else:
 			command.append('umount -fl ' + path)
-# 		print "[NetworkBrowser] UMOUNT-CMD--->",umountcmd
+# 		print("[NetworkBrowser] UMOUNT-CMD--->", umountcmd)
 		self.removeConsole.eBatch(command, self.removeMountPointFinished, [path, callback], debug=True)
 
 	def removeMountPointFinished(self, extra_args):
@@ -505,8 +523,8 @@ class AutoMount():
 				try:
 					os.rmdir(path)
 					harddiskmanager.removeMountedPartition(path)
-				except Exception, ex:
-					print "Failed to remove", path, "Error:", ex
+				except Exception as ex:
+					print("Failed to remove", path, "Error:", ex)
 		if self.removeConsole:
 			if len(self.removeConsole.appContainers) == 0:
 				if callback is not None:

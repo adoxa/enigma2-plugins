@@ -1,3 +1,4 @@
+from __future__ import print_function
 from globalmaptiles import GlobalMercator
 from xml.dom.minidom import parse
 from os import listdir
@@ -53,8 +54,8 @@ class KmlFolder:
             try: # test if we can handle this coords
                 point.getTile(15)# 15 is just a zoomlevel in the middle :)
                 list.append(point)
-            except ValueError, e:
-                print "Import Error: ", point.name, e
+            except ValueError as e:
+                print("Import Error: ", point.name, e)
         return list
 
 
@@ -68,7 +69,7 @@ class RootFolder:
         return KmlFolder(self.parseFile(filepath))
 
     def parseFile(self, filepath):
-        print "parsing ", filepath
+        print("parsing ", filepath)
         return parse(filepath)
 
     def getFiles(self, path):

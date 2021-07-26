@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # for localized messages
+from __future__ import print_function
 from __init__ import _
 from enigma import eTimer
 from Screens.Screen import Screen
@@ -10,6 +11,7 @@ from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Components.Network import iNetwork
 
+
 from Components.Console import Console
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_ACTIVE_SKIN, fileExists
 from Tools.LoadPixmap import LoadPixmap
@@ -17,8 +19,10 @@ from cPickle import dump, load
 import os
 import time
 
+
 import subprocess
 import xml.dom.minidom
+
 
 
 from AutoMount import iAutoMount
@@ -39,7 +43,7 @@ def write_cache(cache_file, cache_data):
 		try:
 			os.mkdir(os.path.dirname(cache_file))
 		except OSError as e:
-			print "[Networkbrowser] Can not create cache file directory %s: %s" % (os.path.dirname(cache_file), str(e))
+			print("[Networkbrowser] Can not create cache file directory %s: %s" % (os.path.dirname(cache_file), str(e)))
 	fd = open(cache_file, 'w')
 	dump(cache_data, fd, -1)
 	fd.close()
@@ -111,7 +115,7 @@ class NetworkBrowser(Screen):
 			self.iface = self.GetNetworkInterfaces()
 		if self.iface is None:
 			self.iface = 'eth0'
-		print "[Networkbrowser] Using Network Interface: %s" % self.iface
+		print("[Networkbrowser] Using Network Interface: %s" % self.iface)
 		self.networklist = None
 
 		self.mounts = None
@@ -189,10 +193,15 @@ class NetworkBrowser(Screen):
 		self.setTitle(_("Browse network neighbourhood"))
 
 
+
 	def keyYellow(self):
 		if os.path.exists(self.cache_file):
 			os.remove(self.cache_file)
 		self.startRun()
+
+
+
+
 
 
 
@@ -233,7 +242,7 @@ class NetworkBrowser(Screen):
 	def makeStrIP(self):
 		self.IP = iNetwork.getAdapterAttribute(self.iface, "ip")
 		self.netmask = iNetwork.getAdapterAttribute(self.iface, "netmask")
-		print "[Networkbrowser] iface %s, ip %s, netmask %s" % (self.iface, self.IP, self.netmask)
+		print("[Networkbrowser] iface %s, ip %s, netmask %s" % (self.iface, self.IP, self.netmask))
 		if self.IP and self.netmask and len(self.IP) == 4 and len(self.netmask) == 4 and sum(self.IP) and sum(self.netmask):
 			strCIDR = str(sum((bin(x).count('1') for x in self.netmask)))
 			strIP = '.'.join((str(ip & mask) for ip, mask in zip(self.IP, self.netmask))) + "/" + strCIDR
@@ -244,13 +253,13 @@ class NetworkBrowser(Screen):
 		self.inv_cache = 0
 		self.vc = valid_cache(self.cache_file, self.cache_ttl)
 		if self.cache_ttl > 0 and self.vc != 0:
-			print '[Networkbrowser] Loading network cache from ', self.cache_file
+			print('[Networkbrowser] Loading network cache from ', self.cache_file)
 			try:
 				self.networklist = load_cache(self.cache_file)
 			except:
 				self.inv_cache = 1
 		if self.cache_ttl == 0 or self.inv_cache == 1 or self.vc == 0:
-			# print '[Networkbrowser] Getting fresh network list'
+			# print('[Networkbrowser] Getting fresh network list')
 
 			if fileExists("/usr/bin/nmap"):
 				strIP = self.makeStrIP()
@@ -275,6 +284,7 @@ class NetworkBrowser(Screen):
 			self["shortcuts"].setEnabled(True)
 
 	def nmapComplete(self, result, retval, extra_args):
+
 
 		dom = xml.dom.minidom.parseString(result)
 		scan_result = []
@@ -318,7 +328,7 @@ class NetworkBrowser(Screen):
 				if "<20>" in item:
 					result = item[0]
 		except OSError as e:
-			print '[Networkbrowser] Running %s failed with %s' % (str(cmd), str(e))
+			print('[Networkbrowser] Running %s failed with %s' % (str(cmd), str(e)))
 		return result
 
 	def getNetworkShares(self, hostentry):
@@ -331,7 +341,7 @@ class NetworkBrowser(Screen):
 		username = ""
 		password = ""
 		if os.path.exists(self.sharecache_file):
-			print '[Networkbrowser] Loading userinfo from ', self.sharecache_file
+			print('[Networkbrowser] Loading userinfo from ', self.sharecache_file)
 			try:
 				self.hostdata = load_cache(self.sharecache_file)
 				username = self.hostdata['username']
@@ -349,7 +359,7 @@ class NetworkBrowser(Screen):
 					if item[0]:
 						sharelist.append(["nfsShare", hostname, hostip, item[0], item[0], ""])
 			except OSError as e:
-				print '[Networkbrowser] Running %s failed with %s' % (str(cmd), str(e))
+				print('[Networkbrowser] Running %s failed with %s' % (str(cmd), str(e)))
 
 		if "smb" in services:
 			if username:
@@ -365,7 +375,7 @@ class NetworkBrowser(Screen):
 					if len(item) == 3 and item[0] == "Disk" and not item[1].endswith("$"):
 						sharelist.append(["smbShare", hostname, hostip, item[1], item[0], item[2]])
 			except OSError as e:
-				print '[Networkbrowser] Running %s failed with %s' % (str(cmd), str(e))
+				print('[Networkbrowser] Running %s failed with %s' % (str(cmd), str(e)))
 
 		return sharelist
 
@@ -407,6 +417,7 @@ class NetworkBrowser(Screen):
 		for x in self.network.keys():
 
 
+
 			hostentry = self.network[x][0][1]
 			name = hostentry[2] + " ( " + hostentry[1].strip() + " )"
 			if os.path.exists(resolveFilename(SCOPE_ACTIVE_SKIN, "networkbrowser/host.png")):
@@ -417,6 +428,7 @@ class NetworkBrowser(Screen):
 			if x in self.expanded:
 				for share in self.expanded[x]:
 					self.list.append(self.BuildNetworkShareEntry(share))
+
 
 
 
@@ -540,7 +552,7 @@ class NetworkBrowser(Screen):
 			try:
 				self.hostdata = load_cache(self.hostcache_file)
 			except Exception as e:
-				print '[Networkbrowser] load cache failed:', str(e)
+				print('[Networkbrowser] load cache failed:', str(e))
 
 			self.passwordQuestion(False)
 		else:
@@ -588,6 +600,7 @@ class NetworkBrowser(Screen):
 				data['options'] = default_mount_options['nfs']
 				data['sharename'] = (selection[1] or selection[2]) + '_' + (os.path.basename(selection[4]) or "root")
 
+
 				data['sharedir'] = selection[4]
 
 
@@ -605,11 +618,12 @@ class NetworkBrowser(Screen):
 
 				data['sharedir'] = selection[3]
 
+
 				data['username'] = ""
 				data['password'] = ""
 				self.sharecache_file = '/etc/enigma2/' + selection[2].strip() + '.cache'
 				if os.path.exists(self.sharecache_file):
-					print '[Networkbrowser] Loading userinfo from ', self.sharecache_file
+					print('[Networkbrowser] Loading userinfo from ', self.sharecache_file)
 					try:
 						self.hostdata = load_cache(self.sharecache_file)
 						data['username'] = self.hostdata['username']
@@ -625,6 +639,11 @@ class NetworkBrowser(Screen):
 	def MountEditClosed(self, returnValue=None):
 		if returnValue is None:
 			self.updateNetworkList()
+
+
+
+
+
 
 
 

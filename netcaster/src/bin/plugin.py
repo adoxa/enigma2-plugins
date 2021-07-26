@@ -1,3 +1,4 @@
+from __future__ import print_function
 from Screens.Screen import Screen
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
@@ -105,17 +106,17 @@ class NETcasterScreenBrowser(Screen):
         global streamplayer
         try:
              streamplayer.metadatachangelisteners.remove(self.onMetadataChanged)
-        except Exception, e:
+        except Exception as e:
             pass
         try:
              streamplayer.onStop.remove(self._onStop)
-        except Exception, e:
+        except Exception as e:
             pass
 
     def onMetadataChanged(self, title):
         try:
              self["metadata"].setText(title)
-        except Exception, e:
+        except Exception as e:
             self.disconnectFromMetadataUpdates()
 
     def getInterfaceList(self):
@@ -168,7 +169,7 @@ class NETcasterScreenBrowser(Screen):
     def stream_stop(self):
         global streamplayer
         if streamplayer.is_playing:
-            print "[", myname, "] stream_startstop -> stop"
+            print("[", myname, "] stream_startstop -> stop")
             streamplayer.stop()
             self.disconnectFromMetadataUpdates()
             self._onStop()

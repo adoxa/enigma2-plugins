@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from enigma import *
 from Screens.Screen import Screen
 from Screens.VirtualKeyBoard import VirtualKeyBoard
@@ -8,7 +9,6 @@ from Components.ActionMap import HelpableActionMap, ActionMap, NumberActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.Input import Input
 from Components.Label import Label
-from Components.HTMLComponent import *
 from Components.GUIComponent import *
 from Plugins.Plugin import PluginDescriptor
 
@@ -48,7 +48,7 @@ class dreamIRCMainMenu(Screen):
 	global x, y
 	x = int(desk.size().width())
 	y = int(desk.size().height())
-	print "[dreamIRC] mainscreen: current desktop size: %dx%d" % (x, y)
+	print("[dreamIRC] mainscreen: current desktop size: %dx%d" % (x, y))
 
 	if (y >= 720):
 		skin = """
@@ -183,7 +183,7 @@ class dreamIRCMainMenu(Screen):
 		self["input"].end()
 
 	def keyNumberGlobal(self, number):
-		print "You pressed number " + str(number)
+		print("You pressed number " + str(number))
 		self["input"].number(number)
 
 	def keyDelete(self):
@@ -219,7 +219,7 @@ class dreamIRCMainMenu(Screen):
 				fp.close()
 				os.rename("/var/log/dreamIRC.log", "/var/log/dreamIRC_%s.log" % timestamp)
 			except IOError:
-				print "--- nothing to remove---"
+				print("--- nothing to remove---")
 			self.pipe.clear()
 			self.pipe.add(" -- not connected.. pls press green to connect!!\n")
 			self.pipe.clearBuddyList()
@@ -262,7 +262,7 @@ class dreamIRCMainMenu(Screen):
 
 	def VirtualKeyBoardTextEntry(self, callback=None):
 		if callback is not None and len(callback):
-			print " TEXT = %s   - laenge = %d  !!!!" % (callback, len(callback))
+			print(" TEXT = %s   - laenge = %d  !!!!" % (callback, len(callback)))
 			self.pipe.addOutText(callback)
 
 
