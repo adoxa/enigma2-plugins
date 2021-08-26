@@ -99,10 +99,6 @@ def RemountCallFunction(iface):
 	return RemountMain
 
 
-def SchedMount(session, **kwargs):
-	session.open(MountAgainCheck)
-
-
 def Plugins(path, **kwargs):
 	global plugin_path
 	plugin_path = path
