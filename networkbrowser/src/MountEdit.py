@@ -204,16 +204,26 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		if password is False:
 			password = ""
 
+		def removeSpaces(configEntry):
+			t = configEntry.value.translate(None, " \t\r\n")
+			if t != configEntry.value:
+				configEntry.value = t
+
 		self.mountusingConfigEntry = NoSave(ConfigSelection(self.mountusing, default=mountusing))
 		self.activeConfigEntry = NoSave(ConfigEnableDisable(default=active))
 		self.ipConfigEntry = NoSave(ConfigIP(default=ip))
 		self.sharenameConfigEntry = NoSave(ConfigText(default=sharename, visible_width=50, fixed_size=False))
+		self.sharenameConfigEntry.addNotifier(removeSpaces)
 		self.sharedirConfigEntry = NoSave(ConfigText(default=sharedir, visible_width=50, fixed_size=False))
+		self.sharedirConfigEntry.addNotifier(removeSpaces)
 		self.optionsConfigEntry = NoSave(ConfigText(default=defaultOptions, visible_width=50, fixed_size=False))
 		if options is not False:
 			self.optionsConfigEntry.value = options
+		self.optionsConfigEntry.addNotifier(removeSpaces)
 		self.usernameConfigEntry = NoSave(ConfigText(default=username, visible_width=50, fixed_size=False))
+		self.usernameConfigEntry.addNotifier(removeSpaces)
 		self.passwordConfigEntry = NoSave(ConfigPassword(default=password, visible_width=50, fixed_size=False))
+		self.passwordConfigEntry.addNotifier(removeSpaces)
 		self.mounttypeConfigEntry = NoSave(ConfigSelection(self.sharetypelist, default=mounttype))
 		self.hdd_replacementConfigEntry = NoSave(ConfigYesNo(default=hdd_replacement))
 
