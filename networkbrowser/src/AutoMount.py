@@ -81,7 +81,6 @@ class AutoMount():
 
 	def getAutoMountPoints(self, callback=None, restart=False):
 		# Initialize mounts to empty list
-		automounts = []
 		self.automounts = {}
 		self.activeMountsCounter = 0
 		if not os.path.exists(XML_FSTAB):
@@ -385,10 +384,8 @@ class AutoMount():
 
 			if sharedata['hdd_replacement'] == 'True' or sharedata['hdd_replacement'] is True:  # hdd replacement hack
 				path = os.path.join('/media/hdd')
-				sharepath = os.path.join('/media/net', sharedata['sharename'])
 			else:
 				path = os.path.join('/media/net', sharedata['sharename'])
-				sharepath = ""
 
 			sharetemp = None
 			if mounttype == 'nfs':
@@ -438,9 +435,7 @@ class AutoMount():
 		# print("[NetworkBrowser] removing mount: ", mountpoint)
 		self.newautomounts = {}
 		for sharename, sharedata in self.automounts.items():
-			sharepath = os.path.join('/media/net', sharedata['sharename'])
 			if sharedata['mountusing'] == 'autofs':
-				sharepath = os.path.join('/media/autofs', sharedata['sharename'])
 				path = os.path.join('/media/autofs', sharedata['sharename'])
 				if sharedata['hdd_replacement'] == 'True' or sharedata['hdd_replacement'] is True:
 					if os.path.islink('/media/hdd'):
@@ -464,7 +459,6 @@ class AutoMount():
 		if not self.removeConsole:
 			self.removeConsole = Console()
 		command = []
-		autofsstop = None
 		if sharedata['mountusing'] == 'autofs':
 			# With a short sleep to allow time for the reload
 			command.append("/etc/init.d/autofs reload; sleep 2")
