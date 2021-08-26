@@ -319,7 +319,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 				self.applyConfig, MessageBox, _("Are you sure you want to save this network mount?\n\n"))
 
 	def updateConfig(self, ret=False):
-		if (ret == True):
+		if (ret):
 			sharedir = None
 			sharename = self.cleanSharename(self.sharenameConfigEntry.value)
 			xml_sharename = self.old_sharename
@@ -364,7 +364,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 				self.close()
 
 	def applyConfig(self, ret=False):
-		if (ret == True):
+		if (ret):
 			data = {
 				'isMounted': False, 'mountusing': False, 'active': False, 'ip': False, 'sharename': False, 'sharedir': False,
 				'username': False, 'password': False, 'mounttype': False, 'options': False, 'hdd_replacement': False
