@@ -14,7 +14,7 @@ from Components.ActionMap import NumberActionMap
 from AutoMount import iAutoMount
 from re import sub as re_sub
 from . import default_mount_options
-from boxbranding import getImageDistro
+from boxbranding import getImageDistro, getMachineBuild
 
 
 class AutoMountEdit(Screen, ConfigListScreen):
@@ -116,9 +116,16 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		self.ipEntry = None
 		self.sharedirEntry = None
 		self.optionsEntry = None
+		self.smbprotoEntry = None
 		self.usernameEntry = None
 		self.passwordEntry = None
 		self.hdd_replacementEntry = None
+
+		self.smb_proto_versions = []
+		self.smb_proto_versions.append(("", _("Default")))
+		if getMachineBuild != "inihdx":
+			self.smb_proto_versions.append((",vers=1.0", _("1.0")))
+			self.smb_proto_versions.append((",vers=2.1", _("2.1")))
 
 		self.mountusing = []
 		self.mountusing.append(("autofs", _("AUTOFS (mount as needed)")))
@@ -176,10 +183,26 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		else:
 			sharedir = ""
 			self.old_sharedir = None
+
+		def parseOptions(options):
+			s = str(options)
+			if ",vers=1.0" in s:
+				smb = ",vers=1.0"
+				opt = s.replace(",vers=1.0", "")
+			elif ",vers=2.1" in s:
+				smb = ",vers=2.1"
+				opt = s.replace(",vers=2.1", "")
+			else:
+				smb = ""
+				opt = options
+			return (smb, opt)
+
 		if 'options' in self.mountinfo:
-			options = self.mountinfo['options']
+			smbdefault, options = parseOptions(self.mountinfo['options'])
 		else:
 			options = defaultOptions
+			smbdefault = ""
+
 		if 'username' in self.mountinfo:
 			username = self.mountinfo['username']
 		else:
@@ -221,6 +244,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		if options is not False:
 			self.optionsConfigEntry.value = options
 		self.optionsConfigEntry.addNotifier(removeSpaces)
+		self.smbprotoConfigEntry = NoSave(ConfigSelection(self.smb_proto_versions, default=smbdefault))
 		self.usernameConfigEntry = NoSave(ConfigText(default=username, visible_width=50, fixed_size=False))
 		self.usernameConfigEntry.addNotifier(removeSpaces)
 		self.passwordConfigEntry = NoSave(ConfigPassword(default=password, visible_width=50, fixed_size=False))
@@ -248,6 +272,8 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		self.optionsEntry = getConfigListEntry(_("Mount options"), self.optionsConfigEntry)
 		self.list.append(self.optionsEntry)
 		if self.mounttypeConfigEntry.value == "cifs":
+			self.smbprotoEntry = getConfigListEntry(_("SMB protocol version"), self.smbprotoConfigEntry)
+			self.list.append(self.smbprotoEntry)
 			self.usernameEntry = getConfigListEntry(_("Username"), self.usernameConfigEntry)
 			self.list.append(self.usernameEntry)
 			self.passwordEntry = getConfigListEntry(_("Password"), self.passwordConfigEntry)
@@ -347,7 +373,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 			iAutoMount.setMountsAttribute(xml_sharename, "ip", self.ipConfigEntry.getText())
 			iAutoMount.setMountsAttribute(xml_sharename, "sharedir", sharedir)
 			iAutoMount.setMountsAttribute(xml_sharename, "mounttype", self.mounttypeConfigEntry.value)
-			iAutoMount.setMountsAttribute(xml_sharename, "options", self.optionsConfigEntry.value)
+			iAutoMount.setMountsAttribute(xml_sharename, "options", self.optionsConfigEntry.value + self.smbprotoConfigEntry.value)
 			iAutoMount.setMountsAttribute(xml_sharename, "username", self.usernameConfigEntry.value)
 			iAutoMount.setMountsAttribute(xml_sharename, "password", self.passwordConfigEntry.value)
 			iAutoMount.setMountsAttribute(xml_sharename, "hdd_replacement", self.hdd_replacementConfigEntry.value)
@@ -391,7 +417,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 				data['sharedir'] = self.sharedirConfigEntry.value[1:]
 			else:
 				data['sharedir'] = self.sharedirConfigEntry.value
-			data['options'] = self.optionsConfigEntry.value
+			data['options'] = self.optionsConfigEntry.value + self.smbprotoConfigEntry.value
 			data['mounttype'] = self.mounttypeConfigEntry.value
 			data['username'] = self.usernameConfigEntry.value
 			data['password'] = self.passwordConfigEntry.value
