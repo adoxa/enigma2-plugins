@@ -46,6 +46,7 @@ class AutoMountEdit(Screen, ConfigListScreen):
 				'username': False, 'password': False, 'mounttype': False, 'options': False, 'hdd_replacement': False
 			}
 
+		self.editableMountType = not self.mountinfo['mounttype']
 		self.applyConfigRef = None
 		self.updateConfigRef = None
 		self.mounts = iAutoMount.getMountsList()
@@ -235,8 +236,9 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		self.list.append(self.activeEntry)
 		self.sharenameEntry = getConfigListEntry(_("Local share name"), self.sharenameConfigEntry)
 		self.list.append(self.sharenameEntry)
-		self.mounttypeEntry = getConfigListEntry(_("Mount type"), self.mounttypeConfigEntry)
-		self.list.append(self.mounttypeEntry)
+		if self.editableMountType:
+			self.mounttypeEntry = getConfigListEntry(_("Mount type"), self.mounttypeConfigEntry)
+			self.list.append(self.mounttypeEntry)
 		self.ipEntry = getConfigListEntry(_("Server IP"), self.ipConfigEntry)
 		self.list.append(self.ipEntry)
 		self.sharedirEntry = getConfigListEntry(_("Server share"), self.sharedirConfigEntry)
