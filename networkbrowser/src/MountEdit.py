@@ -297,11 +297,17 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		self.newConfig()
 
 	def ok(self):
-		current = self["config"].getCurrent()
-		if current in self.kbentries:
-			self.HideHelp()
+		self.HideHelp()
 
 		sharename = self.cleanSharename(self.sharenameConfigEntry.value)
+		sharedir = self.sharedirConfigEntry.value.lstrip("/")
+		# Require both a local share name and remote mount point
+		if not (sharename and sharedir):
+			self.session.openWithCallback(
+				self.restoreHelp, MessageBox, "Neither Local share name nor Server share can be blank!",
+				type=MessageBox.TYPE_ERROR)
+			return
+
 		sharexists = False
 		for data in self.mounts:
 			if self.mounts[data]['sharename'] == self.old_sharename:
@@ -319,6 +325,9 @@ class AutoMountEdit(Screen, ConfigListScreen):
 		else:
 			self.session.openWithCallback(
 				self.applyConfig, MessageBox, _("Are you sure you want to save this network mount?\n\n"))
+
+	def restoreHelp(self, _):
+		self.ShowHelp()
 
 	def updateConfig(self, ret=False):
 		if (ret):
