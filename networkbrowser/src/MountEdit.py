@@ -288,9 +288,8 @@ class AutoMountEdit(Screen, ConfigListScreen):
 
 	def ok(self):
 		current = self["config"].getCurrent()
-		if current == self.sharenameEntry or current == self.sharedirEntry or current == self.optionsEntry or current == self.usernameEntry or current == self.passwordEntry:
-			if current[1].help_window.instance is not None:
-				current[1].help_window.instance.hide()
+		if current in self.kbentries:
+			self.HideHelp()
 
 		sharename = self.cleanSharename(self.sharenameConfigEntry.value)
 		sharexists = False
