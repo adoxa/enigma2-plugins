@@ -50,8 +50,7 @@ class AutoMountManager(Screen):
 		self.restartLanRef = None
 		Screen.__init__(self, session)
 		self.onChangedEntry = []
-		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"],
-		{
+		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"], {
 			"ok": self.keyOK,
 			"back": self.exit,
 			"cancel": self.exit,
@@ -138,7 +137,9 @@ class AutoMountManager(Screen):
 			fp = open('/etc/hostname', 'r')
 			self.hostname = fp.readline().rstrip('\n')
 			fp.close()
-			self.session.openWithCallback(self.hostnameCallback, VirtualKeyBoard, title=(_("Enter new hostname for your Receiver")), text=self.hostname)
+			self.session.openWithCallback(
+				self.hostnameCallback, VirtualKeyBoard, title=(_("Enter new hostname for your Receiver")),
+				text=self.hostname)
 
 	def hostnameCallback(self, callback=None):
 		if callback is not None and len(callback):
@@ -151,7 +152,9 @@ class AutoMountManager(Screen):
 
 	def restartLan(self):
 		iNetwork.restartNetwork(self.restartLanDataAvail)
-		self.restartLanRef = self.session.openWithCallback(self.restartfinishedCB, MessageBox, _("Please wait while your network is restarting..."), type=MessageBox.TYPE_INFO, enable_input=False)
+		self.restartLanRef = self.session.openWithCallback(
+			self.restartfinishedCB, MessageBox, _("Please wait while your network is restarting..."),
+			type=MessageBox.TYPE_INFO, enable_input=False)
 
 	def restartLanDataAvail(self, data):
 		if data is True:
@@ -164,7 +167,9 @@ class AutoMountManager(Screen):
 
 	def restartfinishedCB(self, data):
 		if data is True:
-			self.session.open(MessageBox, _("Finished restarting your network"), type=MessageBox.TYPE_INFO, timeout=10, default=False)
+			self.session.open(
+				MessageBox, _("Finished restarting your network"),
+				type=MessageBox.TYPE_INFO, timeout=10, default=False)
 
 	def createSetup(self):
 		self.session.open(MountManagerMenu)
@@ -199,12 +204,11 @@ class MountManagerMenu(Screen, ConfigListScreen):
 		ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
 		self.createSetup()
 
-		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
-		{
-		    "green": self.keySave,
-		    "red": self.keyCancel,
-		    "cancel": self.keyCancel,
-		    "ok": self.keySave,
+		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"], {
+			"green": self.keySave,
+			"red": self.keyCancel,
+			"cancel": self.keyCancel,
+			"ok": self.keySave,
 		}, -2)
 
 	def createSetup(self):

@@ -17,10 +17,8 @@ from cPickle import dump, load
 import os
 
 
-
-
 def write_cache(cache_file, cache_data):
-	#Does a cPickle dump
+	# Does a cPickle dump
 	if not os.path.isdir(os.path.dirname(cache_file)):
 		try:
 			os.mkdir(os.path.dirname(cache_file))
@@ -29,10 +27,6 @@ def write_cache(cache_file, cache_data):
 	fd = open(cache_file, 'w')
 	dump(cache_data, fd, -1)
 	fd.close()
-
-
-
-
 
 def load_cache(cache_file):
 	#Does a cPickle load
@@ -65,16 +59,14 @@ class UserDialog(Screen, ConfigListScreen):
 		self.cache_file = '/etc/enigma2/' + self.hostinfo + '.cache'  # Path to cache directory
 		self.createConfig()
 
-		self["actions"] = NumberActionMap(["SetupActions"],
-		{
+		self["actions"] = NumberActionMap(["SetupActions"], {
 			"ok": self.ok,
 			"back": self.close,
 			"cancel": self.close,
 			"red": self.close,
 		}, -2)
 
-		self["VirtualKB"] = ActionMap(["VirtualKeyboardActions"],
-		{
+		self["VirtualKB"] = ActionMap(["VirtualKeyboardActions"], {
 			"showVirtualKeyboard": self.KeyText,
 		}, -2)
 
@@ -114,8 +106,6 @@ class UserDialog(Screen, ConfigListScreen):
 			except:
 				pass
 
-
-
 		self.username = NoSave(ConfigText(default=username, visible_width=50, fixed_size=False))
 		self.password = NoSave(ConfigPassword(default=password, visible_width=50, fixed_size=False))
 
@@ -132,9 +122,13 @@ class UserDialog(Screen, ConfigListScreen):
 
 	def KeyText(self):
 		if self["config"].getCurrent() == self.usernameEntry:
-			self.session.openWithCallback(lambda x: self.VirtualKeyBoardCallback(x, 'username'), VirtualKeyBoard, title=(_("Enter username:")), text=self.username.value)
+			self.session.openWithCallback(
+				lambda x: self.VirtualKeyBoardCallback(x, 'username'), VirtualKeyBoard,
+				title=(_("Enter username:")), text=self.username.value)
 		if self["config"].getCurrent() == self.passwordEntry:
-			self.session.openWithCallback(lambda x: self.VirtualKeyBoardCallback(x, 'password'), VirtualKeyBoard, title=(_("Enter password:")), text=self.password.value)
+			self.session.openWithCallback(
+				lambda x: self.VirtualKeyBoardCallback(x, 'password'), VirtualKeyBoard,
+				title=(_("Enter password:")), text=self.password.value)
 
 	def VirtualKeyBoardCallback(self, callback=None, entry=None):
 		if callback is not None and len(callback) and entry is not None and len(entry):
