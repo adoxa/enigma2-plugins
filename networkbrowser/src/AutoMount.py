@@ -122,7 +122,7 @@ class AutoMount():
 			self.CheckMountPoint(self.checkList.pop(), callback, restart)
 
 	def sanitizeOptions(self, origOptions, cifs=False, fstab=False, autofs=False):
-		options = origOptions.strip()
+		options = origOptions.strip().replace(" ", "")
 		options = options.replace('utf8', 'iocharset=utf8')
 		if fstab:
 			if not options:
