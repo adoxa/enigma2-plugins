@@ -76,7 +76,7 @@ class AutoMount():
 		else:
 			self.automounts[data['sharename']] = data
 
-			if data["active"] == 'True' or data["active"] == True:
+			if data["active"] is True or data["active"] == 'True':
 				self.activeMountsCounter += 1
 
 	def getAutoMountPoints(self, callback=None, restart=False):
@@ -382,7 +382,7 @@ class AutoMount():
 			mounttype = sharedata['mounttype']
 			mountusing = sharedata['mountusing']
 
-			if sharedata['hdd_replacement'] == 'True' or sharedata['hdd_replacement'] is True:  # hdd replacement hack
+			if sharedata['hdd_replacement'] is True or sharedata['hdd_replacement'] == 'True':  # hdd replacement hack
 				path = os.path.join('/media/hdd')
 			else:
 				path = os.path.join('/media/net', sharedata['sharename'])
@@ -394,11 +394,11 @@ class AutoMount():
 				self.removeEntryFromFile(sharetemp, '/etc/fstab')
 			elif mounttype == 'cifs':
 				sharetemp = '//' + sharedata['ip'] + '/' + sharedata['sharedir']
-				self.removeEntryFromAutofsMap(sharedata['sharename'], ":" + sharetemp+'\n', '/etc/auto.network')
+				self.removeEntryFromAutofsMap(sharedata['sharename'], ":" + sharetemp + '\n', '/etc/auto.network')
 				self.removeEntryFromFile(sharetemp, '/etc/fstab')
 
 			if mountusing == 'autofs':
-				if sharedata['active'] == True or sharedata['active'] == 'True':
+				if sharedata['active'] is True or sharedata['active'] == 'True':
 					out = open('/etc/auto.network', 'a')
 					if mounttype == 'nfs':
 						line = sharedata['sharename'] + ' -fstype=' + mounttype + ',' + \
@@ -415,7 +415,7 @@ class AutoMount():
 					out.write(line)
 					out.close()
 			elif mountusing == 'fstab':
-				if sharedata['active'] == True or sharedata['active'] == 'True':
+				if sharedata['active'] is True or sharedata['active'] == 'True':
 					out = open('/etc/fstab', 'a')
 					if sharedata['mounttype'] == 'nfs':
 						line = sharedata['ip'] + ':/' + sharedata['sharedir'] + '\t' + path + \
