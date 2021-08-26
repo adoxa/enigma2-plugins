@@ -11,6 +11,8 @@ from xml.etree.cElementTree import parse as cet_parse
 from shutil import rmtree
 from . import default_mount_options
 
+AUTOFS_NET = "/etc/auto.network"
+FSTAB = "/etc/fstab"
 XML_FSTAB = "/etc/enigma2/automounts.xml"
 
 
@@ -390,16 +392,16 @@ class AutoMount():
 			sharetemp = None
 			if mounttype == 'nfs':
 				sharetemp = sharedata['ip'] + ':/' + sharedata['sharedir']
-				self.removeEntryFromAutofsMap(sharedata['sharename'], sharetemp + '\n', '/etc/auto.network')
-				self.removeEntryFromFile(sharetemp, '/etc/fstab')
+				self.removeEntryFromAutofsMap(sharedata['sharename'], sharetemp + '\n', AUTOFS_NET)
+				self.removeEntryFromFile(sharetemp, FSTAB)
 			elif mounttype == 'cifs':
 				sharetemp = '//' + sharedata['ip'] + '/' + sharedata['sharedir']
-				self.removeEntryFromAutofsMap(sharedata['sharename'], ":" + sharetemp + '\n', '/etc/auto.network')
-				self.removeEntryFromFile(sharetemp, '/etc/fstab')
+				self.removeEntryFromAutofsMap(sharedata['sharename'], ":" + sharetemp + '\n', AUTOFS_NET)
+				self.removeEntryFromFile(sharetemp, FSTAB)
 
 			if mountusing == 'autofs':
 				if sharedata['active'] is True or sharedata['active'] == 'True':
-					out = open('/etc/auto.network', 'a')
+					out = open(AUTOFS_NET, 'a')
 					if mounttype == 'nfs':
 						line = sharedata['sharename'] + ' -fstype=' + mounttype + ',' + \
 							self.sanitizeOptions(sharedata['options'], autofs=True) + \
@@ -416,7 +418,7 @@ class AutoMount():
 					out.close()
 			elif mountusing == 'fstab':
 				if sharedata['active'] is True or sharedata['active'] == 'True':
-					out = open('/etc/fstab', 'a')
+					out = open(FSTAB, 'a')
 					if sharedata['mounttype'] == 'nfs':
 						line = sharedata['ip'] + ':/' + sharedata['sharedir'] + '\t' + path + \
 							'\tnfs\t_netdev,' + self.sanitizeOptions(sharedata['options'], fstab=True) + '\t0 0\n'
@@ -452,8 +454,8 @@ class AutoMount():
 			elif sharedata['mounttype'] == 'cifs':
 				sharetemp = '://' + sharedata['ip'] + '/' + sharedata['sharedir']
 			if sharetemp:
-				self.removeEntryFromAutofsMap(sharedata['sharename'], sharetemp + '\n', '/etc/auto.network')
-				self.removeEntryFromFile(sharetemp, '/etc/fstab')
+				self.removeEntryFromAutofsMap(sharedata['sharename'], sharetemp + '\n', AUTOFS_NET)
+				self.removeEntryFromFile(sharetemp, FSTAB)
 		self.automounts.clear()
 		self.automounts = self.newautomounts
 		if not self.removeConsole:
