@@ -293,11 +293,6 @@ class AutoMountEdit(Screen, ConfigListScreen):
 				current[1].help_window.instance.hide()
 
 		sharename = self.cleanSharename(self.sharenameConfigEntry.value)
-		if self.sharedirConfigEntry.value.startswith("/"):
-			sharedir = self.sharedirConfigEntry.value[1:]
-		else:
-			sharedir = self.sharedirConfigEntry.value
-
 		sharexists = False
 		for data in self.mounts:
 			if self.mounts[data]['sharename'] == self.old_sharename:
