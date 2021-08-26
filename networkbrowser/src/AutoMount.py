@@ -87,12 +87,13 @@ class AutoMount():
 		self.activeMountsCounter = 0
 		if not os.path.exists(XML_FSTAB):
 			return
-		file = open(XML_FSTAB, 'r')
-		tree = cet_parse(file).getroot()
-		file.close()
-
-
-
+		try:
+			with open(XML_FSTAB, 'r') as f:
+				tree = cet_parse(f).getroot()
+		except:
+			# Move a corrupt file out of the way
+			os.rename(XML_FSTAB, XML_FSTAB + ".bad")
+			return
 
 
 		# Config is stored in "mountmanager" element
