@@ -6,11 +6,10 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
-from Components.Network import iNetwork
 from Components.Sources.List import List
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_SKIN_IMAGE, SCOPE_ACTIVE_SKIN, fileExists
-from AutoMount import iAutoMount, AutoMount
+from AutoMount import iAutoMount
 from MountEdit import AutoMountEdit
 
 
@@ -48,11 +47,10 @@ class AutoMountView(Screen):
 		self.skin_path = plugin_path
 		self.session = session
 		Screen.__init__(self, session)
- 		Screen.setTitle(self, _("Mount Viewer"))
+		Screen.setTitle(self, _("Mount Viewer"))
 		self.mounts = None
 		self.applyConfigRef = None
-		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"],
-		{
+		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"], {
 				"ok": self.keyOK,
 				"back": self.exit,
 				"cancel": self.exit,
@@ -116,12 +114,12 @@ class AutoMountView(Screen):
 		sharename = entry["sharename"]
 		IPdescription = _("IP:") + " " + str(entry["ip"])
 		DIRdescription = _("Dir:") + " " + str(entry["sharedir"])
-		if entry["active"] == 'True' or entry["active"] == True:
+		if entry["active"] == 'True' or entry["active"] is True:
 			if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png")):
 				activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png"))
 			else:
 				activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_SKIN_IMAGE, "skin_default/icons/lock_on.png"))
-		if entry["active"] == 'False' or entry["active"] == False:
+		if entry["active"] == 'False' or entry["active"] is False:
 			if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_error.png")):
 				activepng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_error.png"))
 			else:
@@ -148,13 +146,15 @@ class AutoMountView(Screen):
 			self.session.openWithCallback(self.MountEditClosed, AutoMountEdit, self.skin_path, iAutoMount.automounts[returnValue], False)
 
 	def MountEditClosed(self, returnValue=None):
-		if returnValue == None:
+		if returnValue is None:
 			self.showMountsList()
 
 	def delete(self, returnValue=None):
 		cur = self["config"].getCurrent()
 		if cur:
-			self.session.openWithCallback(self.deleteCB, MessageBox, _("Are you sure you want to remove your network mount ?"), type=MessageBox.TYPE_YESNO, default=False)
+			self.session.openWithCallback(
+				self.deleteCB, MessageBox, _("Are you sure you want to remove your network mount ?"),
+				type=MessageBox.TYPE_YESNO, default=False)
 
 	def deleteCB(self, answer):
 		if answer:
@@ -165,7 +165,9 @@ class AutoMountView(Screen):
 		if cur:
 			returnValue = cur[1]
 			print('returnValue', returnValue)
-			self.applyConfigRef = self.session.openWithCallback(self.applyConfigfinishedCB, MessageBox, _("Please wait while removing your network mount..."), type=MessageBox.TYPE_INFO, enable_input=False)
+			self.applyConfigRef = self.session.openWithCallback(
+				self.applyConfigfinishedCB, MessageBox, _("Please wait while removing your network mount..."),
+				type=MessageBox.TYPE_INFO, enable_input=False)
 			iAutoMount.removeMount(returnValue, self.removeDataAvail)
 
 	def removeDataAvail(self, data):
@@ -189,7 +191,9 @@ class AutoMountView(Screen):
 		print('!!!!!!remove mount test3', data)
 		if data:
 			print('!!!!!! show removed popup')
-			self.session.openWithCallback(self.ConfigfinishedCB, MessageBox, _("Your network mount has been removed."), type=MessageBox.TYPE_INFO, timeout=10)
+			self.session.openWithCallback(
+				self.ConfigfinishedCB, MessageBox, _("Your network mount has been removed."),
+				type=MessageBox.TYPE_INFO, timeout=10)
 
 	def ConfigfinishedCB(self, data):
 		print('!!!!!!remove mount test4', data)

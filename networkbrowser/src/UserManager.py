@@ -39,8 +39,7 @@ class UserManager(Screen):
 		self.skin_path = plugin_path
 		self.session = session
 		Screen.__init__(self, session)
-		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"],
-		{
+		self["shortcuts"] = ActionMap(["ShortcutActions", "WizardActions"], {
 			"ok": self.keyOK,
 			"back": self.exit,
 			"cancel": self.exit,
